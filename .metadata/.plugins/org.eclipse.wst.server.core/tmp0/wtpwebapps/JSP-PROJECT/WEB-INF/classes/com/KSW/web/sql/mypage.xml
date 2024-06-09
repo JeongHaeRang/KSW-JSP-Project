@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MyPage">
+	<select id="getOrderList" resultType="orderdto" parameterType="hashmap">
+		SELECT b.ordernum, b.isbn , TO_CHAR(b.orderdate, 'YYYY-MM-DD')orderdate, b.userid, b.title, b.discount, b.replystatus, b. count FROM (SELECT rownum r , a.* FROM (SELECT * FROM KSW_ORDERLIST WHERE USERID = #{userid} ORDER BY ORDERNUM DESC) a) b
+		WHERE b.r BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="getOrderCnt" resultType="_int" parameterType="String">
+		SELECT COUNT(*) FROM KSW_ORDERLIST WHERE USERID=#{userid}
+	</select>
+	
+	<select id="getUserName" resultType="String" parameterType="String">
+		SELECT username FROM KSW_USERS WHERE USERID=#{userid}
+	</select>
+	<insert id="setCart" parameterType="cartdto">
+		INSERT INTO KSW_CART VALUES (cart_seq.nextval,#{userId},#{title},#{discount},#{image},#{isbn},1)
+	</insert>
+	<select id="getCart" parameterType="hashmap" resultType="_int">
+		SELECT COUNT(*) FROM KSW_CART WHERE USERID = #{userid} AND isbn =#{isbn}
+	</select>
+	<delete id="delCart" parameterType="_int">
+		DELETE FROM KSW_CART WHERE CARTNUM = #{cartNum}
+	</delete>
+	<update id="updateUserName" parameterType="map">
+	    UPDATE KSW_USERS SET username = #{username} WHERE USERID = #{userid}
+	</update>
+	
+	<update id="updateUserPassword" parameterType="map">
+	    UPDATE KSW_USERS SET userpw = #{userpw} WHERE USERID = #{userid}
+	</update>
+	
+	<update id="updateUserAddress" parameterType="map">
+	    UPDATE KSW_USERS SET useraddr = #{useraddr} WHERE USERID = #{userid}
+	</update>
+	<insert id="setOrder" parameterType="orderdto">
+		INSERT INTO KSW_ORDERLIST VALUES (order_seq.nextval,#{orderDate},#{userId},#{title},#{discount},#{isbn},'리뷰미작성',#{count})
+	</insert>
+	<select id="getTitle" parameterType="String" resultType="String">
+		SELECT TITLE FROM KSW_ORDERLIST WHERE ordernum = #{ordernum}
+	</select>
+	<update id="updateReplyStatus" parameterType="_int">
+	    UPDATE KSW_ORDERLIST SET REPLYSTATUS = '리뷰작성' WHERE ORDERNUM = #{ordernum}
+	</update>
+</mapper>

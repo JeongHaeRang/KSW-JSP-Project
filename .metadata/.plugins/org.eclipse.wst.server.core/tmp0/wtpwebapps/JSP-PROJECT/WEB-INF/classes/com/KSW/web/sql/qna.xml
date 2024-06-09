@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Qna">
+	<select id="getinquiryList" resultType="qnadto" parameterType="hashmap">
+		SELECT b.qnanum, TO_CHAR(b.createdat, 'YYYY-MM-DD')createdat, b.userid, b.qnatitle, b.qnadetails, TO_CHAR(b.answerat, 'YYYY-MM-DD')answerat, b.qnaanswer FROM (SELECT rownum r , a.* FROM (SELECT * FROM KSW_QNA WHERE USERID = #{userid} ORDER BY QNANUM DESC) a) b
+		WHERE b.r BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="getinquiryListAdmin" resultType="qnadto" parameterType="hashmap">
+		SELECT b.qnanum, TO_CHAR(b.createdat, 'YYYY-MM-DD')createdat, b.userid, b.qnatitle, b.qnadetails, TO_CHAR(b.answerat, 'YYYY-MM-DD')answerat, b.qnaanswer FROM (SELECT rownum r , a.* FROM (SELECT * FROM KSW_QNA ORDER BY QNANUM DESC) a) b
+		WHERE b.r BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="getinquiryCnt" resultType="_int" parameterType="String">
+		SELECT COUNT(*) FROM KSW_QNA WHERE USERID=#{userid}
+	</select>
+	
+	<insert id="insertinquiryWrite" parameterType="qnadto">
+		INSERT INTO KSW_QNA VALUES (qna_seq.nextval,#{userId},#{qnatitle},#{qnaDetails},#{createdat},null,null)
+	</insert>
+	
+	<select id="getNotificationList" resultType="notdto" >
+		SELECT * FROM KSW_NOTIFICATION
+	</select>
+	
+	<insert id="insertnoticeWrite" parameterType="notdto">
+		INSERT INTO KSW_NOTIFICATION VALUES (notification_seq.nextval,#{userId},#{notificationTitle},#{notificationDetails},#{createdAt},null)
+	</insert>
+	
+	<delete id="deletenotice" parameterType="_int">
+		DELETE FROM KSW_NOTIFICATION WHERE notificationNum = #{notificationNum}
+	</delete>
+	
+	<update id="updatenotice" parameterType="notdto">
+		UPDATE KSW_NOTIFICATION 
+		SET notificationTitle = #{notificationTitle}, notificationDetails = #{notificationDetails}, updatedAt = #{updatedAt} 
+		WHERE notificationNum = #{notificationNum}
+	</update>
+	
+	<select id="getnotificationTitle" resultType="String" parameterType="_int">
+		SELECT notificationTitle FROM KSW_NOTIFICATION WHERE notificationNum = #{notificationNum}
+	</select>
+	
+	<select id="getnotificationDetails" resultType="String" parameterType="_int">
+		SELECT notificationDetails FROM KSW_NOTIFICATION WHERE notificationNum = #{notificationNum}
+	</select>
+</mapper>

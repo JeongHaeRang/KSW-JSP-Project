@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Users">
+	<insert id="join" parameterType="usersdto" >
+		INSERT INTO KSW_USERS VALUES (#{userid},#{userpw},#{username},#{userbirth},#{userphone},#{useraddr},#{useremail})
+	</insert>
+	
+	<select id="login" parameterType="hashmap" resultType="usersdto" >
+			SELECT * FROM KSW_USERS WHERE USERID = #{userid} and USERPW = #{userpw}
+	</select>
+	<select id="loginboolean" parameterType="hashmap" resultType="_int" >
+			SELECT count(*) FROM KSW_USERS WHERE USERID = #{userid} and USERPW = #{userpw}
+	</select>
+	<select id="findid" parameterType="hashmap" resultType="_int">
+			SELECT COUNT(*) FROM KSW_USERS WHERE USERNAME = #{username} AND USEREMAIL = #{useremail}
+	</select>
+	<select id="getid" parameterType="hashmap" resultType="String">
+			SELECT USERID FROM KSW_USERS WHERE USERNAME = #{username} AND USEREMAIL = #{useremail}
+	</select>
+	<select id="findpw" parameterType="hashmap" resultType="_int">
+			SELECT COUNT(*) FROM KSW_USERS WHERE USERNAME = #{username} AND USERID = #{userid} AND USEREMAIL = #{useremail} 
+	</select>
+	<update id="updatepw" parameterType="hashmap">
+			UPDATE KSW_USERS SET USERPW = #{newuserpw} WHERE userid = #{userid}
+	</update>
+	<select id = "CheckId" parameterType = "string" resultType = "_int">
+      		SELECT count(*) FROM KSW_USERS WHERE userid = #{userid}
+   </select>
+   <select id="getuseremail" parameterType="String" resultType="String">
+			SELECT useremail FROM KSW_USERS WHERE USERID = #{userid}
+	</select>
+	<select id="getusername" parameterType="String" resultType="String">
+			SELECT username FROM KSW_USERS WHERE USERID = #{userid}
+	</select>
+	<select id="getuserbirth" parameterType="String" resultType="String">
+			SELECT userbirth FROM KSW_USERS WHERE USERID = #{userid}
+	</select>
+	<select id="getuserphone" parameterType="String" resultType="String">
+			SELECT userphone FROM KSW_USERS WHERE USERID = #{userid}
+	</select>
+	<select id="getuseraddr" parameterType="String" resultType="String">
+			SELECT useraddr FROM KSW_USERS WHERE USERID = #{userid}
+	</select>
+	<insert id="setreply" parameterType="reviewdto">
+		INSERT INTO KSW_REPLY VALUES (reply_seq.nextval,#{isbn},#{userid},sysdate,#{replygrade},#{reply})
+	</insert>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Search">
+	<select id="selectCartListCount" parameterType="String"
+		resultType="_int">
+		SELECT COUNT(*) FROM KSW_CART WHERE USERID = #{userid}
+	</select>
+	<select id="getCartList" parameterType="string"
+		resultType="cartdto">
+		SELECT * FROM KSW_CART WHERE USERID = #{userid} ORDER BY CARTNUM asc
+	</select>
+	<select id="getCartCnt" resultType="_int" parameterType="String">
+		SELECT
+		COUNT(*) FROM KSW_CART WHERE USERID = #{userid}
+	</select>
+	<insert id="setBookDetail" parameterType="bookdto">
+		INSERT INTO KSW_BOOK
+		VALUES(#{isbn},#{title},#{image},#{author},#{discount},#{publisher},#{description},#{pubdate})
+	</insert>
+	<select id="traffic" parameterType="hashmap" resultType="bookdto">
+		SELECT b.* FROM
+	(SELECT rownum rn, a.* FROM
+	(SELECT count(*),isbn,title,image, author,discount,publisher,TO_CHAR(description) as description,pubdate FROM KSW_BOOK
+	group BY isbn,title,image, author,discount,publisher,TO_CHAR(description),pubdate ORDER BY count(*) desc)  a) b
+WHERE b.rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<select id="getreplys" parameterType="String" resultType="reviewdto">
+		SELECT * FROM KSW_REPLY WHERE ISBN = #{ISBN}
+	</select>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
